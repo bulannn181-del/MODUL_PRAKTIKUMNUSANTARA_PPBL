@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../models/favorit_model.dart';
 import '../navigation/app_routes.dart';
 
 class LayananPage extends StatelessWidget {
@@ -175,6 +178,9 @@ class LayananPage extends StatelessWidget {
     required String jam,
     required String keterangan,
   }) {
+    final favoritModel = context.watch<FavoritModel>();
+    final isFavorit = favoritModel.favorit.contains(nama);
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
@@ -199,9 +205,28 @@ class LayananPage extends StatelessWidget {
 
         isThreeLine: true,
 
-        trailing: const Icon(
-          Icons.arrow_forward_ios,
-          size: 18,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(
+                isFavorit ? Icons.star : Icons.star_border,
+                color: isFavorit ? Colors.amber : Colors.grey,
+              ),
+              onPressed: () {
+                if (isFavorit) {
+                  context.read<FavoritModel>().batalTandai(nama);
+                } else {
+                  context.read<FavoritModel>().tandai(nama);
+                }
+              },
+            ),
+
+            const Icon(
+              Icons.arrow_forward_ios,
+              size: 18,
+            ),
+          ],
         ),
 
         onTap: () {
@@ -217,3 +242,5 @@ class LayananPage extends StatelessWidget {
     );
   }
 }
+
+
